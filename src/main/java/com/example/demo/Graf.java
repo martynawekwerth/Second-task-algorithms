@@ -84,7 +84,7 @@ public class Graf {
             return adjacentVertices.get(new Vertex(label));
         }
 
-        Set<String> breadthFirstTraversal(Graph graph, String root) {
+        Set<String> breadthFirstSearch(Graph graph, String root) {
             Set<String> visited = new LinkedHashSet<String>();
             Queue<String> queue = new LinkedList<String>();
             queue.add(root);
@@ -100,15 +100,44 @@ public class Graf {
             }
             return visited;
         }
+
+        Set<String> depthFirstSearch(Graph graph, String root) {
+            Set<String> visited = new LinkedHashSet<String>();
+            Stack<String> stack = new Stack<String>();
+            stack.push(root);
+            while (!stack.isEmpty()) {
+                String vertex = stack.pop();
+                if (!visited.contains(vertex)) {
+                    visited.add(vertex);
+                    for (Vertex v : graph.getAdjVertices(vertex)) {
+                        stack.push(v.label);
+                    }
+                }
+            }
+            return visited;
+        }
     }
 
 
     @Test
-    public void testBreadthFirstTraversal() {
+    public void testBreadthFirstSearch() {
         Graf.Graph graph = new Graf().new Graph();
         graph = graph.createGraph();
         Set<String> expected = new LinkedHashSet<>(Arrays.asList("Bob", "Alice", "Rob", "Mark", "Maria"));
-        Set<String> result = graph.breadthFirstTraversal(graph, "Bob");
+        Set<String> result = graph.breadthFirstSearch(graph, "Bob");
+        if (expected.equals(result)) {
+            System.out.println("Test passed");
+        } else {
+            System.out.println("Test failed");
+        }
+    }
+
+    @Test
+    public void testDepthFirstSearch() {
+        Graf.Graph graph = new Graph();
+        graph = graph.createGraph();
+        Set<String> expected = new LinkedHashSet<>(Arrays.asList("Bob", "Rob", "Maria", "Mark", "Alice"));
+        Set<String> result = graph.depthFirstSearch(graph, "Bob");
         if (expected.equals(result)) {
             System.out.println("Test passed");
         } else {
