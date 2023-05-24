@@ -1,58 +1,53 @@
 package com.example.demo;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
-import com.example.demo.Graf.Graph;
 
-
-import static com.example.demo.GraphGenerator.getRandomVertex;
 
 public class Main {
-
-
     public static void main(String[] args) {
-        GraphGenerator graphGenerator = new GraphGenerator();
-        StepCounter counter = new StepCounter();
+        StepCounter counter;
 
+        for (int i = 3; i <= 10; i++) {
 
-        int numVertices = 23;
-        Graph graph = GraphGenerator.generateGraph(numVertices);
-        System.out.println("Wygenerowany graf o " + numVertices + " wierzchołkach");
+            int numVertices = (int) Math.pow(2, i);
+            Graph graph = GraphGenerator.generateGraph(numVertices);
+            System.out.println("Wygenerowany graf o " + numVertices + " wierzchołkach");
+            System.out.println(graph);
 
-
-        String startVertex = getRandomVertex(graph);
-        String endVertex = getRandomVertex(graph);
-        System.out.println("Losowo wybrane wierzchołki: " + startVertex + ", " + endVertex);
-
-        Set<String> bfsResult = graph.breadthFirstSearch(graph, startVertex, counter);
-        System.out.println("Wynik BFS: " + bfsResult);
-        System.out.println("Liczba kroków w BFS: " + counter.get_count());
-
-        counter = new StepCounter();
-        Set<String> dfsResult = graph.depthFirstSearch(graph, startVertex, counter);
-        System.out.println("Wynik DFS: " + dfsResult);
-        System.out.println("Liczba kroków w DFS: " + counter.get_count());
-
-        for (int i = 0; i < 3; i++) {
-            numVertices += 23;
-            graph = graphGenerator.generateGraph(numVertices);
-            System.out.println("\nWygenerowany graf o " + numVertices + " wierzchołkach");
-
-
-            startVertex = getRandomVertex(graph);
-            endVertex = getRandomVertex(graph);
-            System.out.println("Losowo wybrane wierzchołki: " + startVertex + ", " + endVertex);
+            Vertex startVertex = GraphGenerator.getRandomVertex(graph);
+            Vertex endVertex;
+            do
+                endVertex = GraphGenerator.getRandomVertex(graph);
+            while (startVertex.equals(endVertex));
+            System.out.println("Losowo wybrany wierzchołek startowy: " + startVertex.label);
+            System.out.println("Losowo wybrany wierzchołek docelowy: " + endVertex.label);
 
             counter = new StepCounter();
-            bfsResult = graph.breadthFirstSearch(graph, startVertex, counter);
-            System.out.println("Wynik BFS: " + bfsResult);
+            ArrayList<Vertex> bfsResult = graph.breadthFirstSearch(graph, startVertex, endVertex,  counter);
+            System.out.print("Wynik BFS: [");
+            for (int j=0; j<bfsResult.size(); j++) {
+                System.out.print(bfsResult.get(j).label);
+                if (j < bfsResult.size() - 1)
+                    System.out.print(", ");
+            }
+            System.out.println("]");
             System.out.println("Liczba kroków w BFS: " + counter.get_count());
 
             counter = new StepCounter();
-            dfsResult = graph.depthFirstSearch(graph, startVertex, counter);
-            System.out.println("Wynik DFS: " + dfsResult);
+            ArrayList<Vertex> dfsResult = graph.depthFirstSearch(graph, startVertex, endVertex, counter);
+            System.out.print("Wynik DFS: [");
+            for (int j=0; j<dfsResult.size(); j++) {
+                System.out.print(dfsResult.get(j).label);
+                if (j < dfsResult.size() - 1)
+                    System.out.print(", ");
+            }
+            System.out.println("]");
             System.out.println("Liczba kroków w DFS: " + counter.get_count());
+
+            System.out.println();
         }
-
-
     }
 }
 
